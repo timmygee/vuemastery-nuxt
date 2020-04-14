@@ -17,17 +17,28 @@ export default {
   components: {
     EventCard
   },
-  asyncData({ $axios, error }) {
-    return $axios
-      .get('http://localhost:3001/events')
-      .then((response) => ({ events: response.data }))
-      .catch((e) => {
-        error({
-          statusCode: 503,
-          message: 'Unable to fetch events at this time. Please try again.'
-        })
+  async asyncData({ $axios, error }) {
+    try {
+      const { data } = await $axios.get('http://localhost:3001/events')
+      return { events: data }
+    } catch (e) {
+      error({
+        statusCode: 503,
+        message: 'Unable to fetch events at this time. Please try again.'
       })
+    }
   },
+  // asyncData({ $axios, error }) {
+  //   return $axios
+  //     .get('http://localhost:3001/events')
+  //     .then((response) => ({ events: response.data }))
+  //     .catch((e) => {
+  //       error({
+  //         statusCode: 503,
+  //         message: 'Unable to fetch events at this time. Please try again.'
+  //       })
+  //     })
+  // },
   head() {
     return {
       title: 'Event Listing'
